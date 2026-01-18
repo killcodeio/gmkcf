@@ -28,11 +28,11 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
     mkdir -p src && \
     echo "pub fn dummy() {}" > src/lib.rs && \
     echo "fn main() {}" > src/main.rs && \
-    cargo build --release && \
+    cargo build --release --features server && \
     rm -rf src target/release/gmkcf* target/release/deps/gmkcf*
 
 COPY . .
 
 EXPOSE 8080
 
-CMD ["cargo", "watch", "-x", "run --bin gmkcf"]
+CMD ["cargo", "watch", "-x", "run --bin gmkcf --features server"]

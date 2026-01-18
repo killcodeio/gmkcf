@@ -36,7 +36,7 @@ COPY . .
 # Do not mount /app/target here to ensure fresh build of the app code itself
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/usr/local/cargo/git \
-    cargo build --release --bin gmkcf && \
+    cargo build --release --bin gmkcf --features server && \
     cp target/release/gmkcf /app/gmkcf && \
     chmod +x /app/gmkcf
 

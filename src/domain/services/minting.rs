@@ -38,7 +38,6 @@ impl MintingService {
             nonce: hex::encode(body_nonce),
             recipient_public_key: public_key_hex, // Store server's public key for lookup
             file_id, // Store file ID for key exchange
-            genealogy: None, 
         };
 
         // 7. Assemble File

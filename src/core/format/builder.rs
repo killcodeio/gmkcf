@@ -29,27 +29,32 @@ impl KcFileBuilder {
     }
 
     pub fn build(self) -> Result<Vec<u8>> {
-        let header = self.header.context("Header is required")?;
-        let body = self.body.context("Body is required")?;
-
         let mut buffer = Vec::new();
+        self.write_to(&mut buffer)?;
+        Ok(buffer)
+    }
 
+    pub fn write_to<W: Write>(self, writer: &mut W) -> Result<()> {
+        let header = self.header.context("Header is required")?;
+        
         // 1. Write Immutables: Magic
-        buffer.write_all(MAGIC_BYTES)?;
+        writer.write_all(MAGIC_BYTES)?;
 
         // 2. Prepare Header JSON
         let json_bytes = serde_json::to_vec(&header).context("Failed to serialize header")?;
         let header_len = json_bytes.len() as u32;
 
         // 3. Write Header Length (u32 Big Endian)
-        buffer.write_u32::<BigEndian>(header_len)?;
+        writer.write_u32::<BigEndian>(header_len)?;
 
         // 4. Write Header JSON
-        buffer.write_all(&json_bytes)?;
+        writer.write_all(&json_bytes)?;
 
-        // 5. Write Body
-        buffer.write_all(&body)?;
+        // 5. Write Body (if present)
+        if let Some(body) = self.body {
+            writer.write_all(&body)?;
+        }
 
-        Ok(buffer)
+        Ok(())
     }
 }

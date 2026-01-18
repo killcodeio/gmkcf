@@ -1,10 +1,7 @@
 use actix_web::{App, HttpServer, middleware};
 use env_logger;
 use log::info;
-
-mod api;
-mod core;
-mod domain;
+use gmkcf::api;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
